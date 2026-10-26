@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlashForReal - Exchange Real USDT to Flash USDT instantly</title>
+    
+    <!-- SEO & Meta Data for Google Search Ranking -->
+    <meta name="description" content="The fastest and most trusted way to exchange Real USDT for Flash USDT. Premium packages, instant QR payment, and verified delivery within 30 minutes. 24/7 Support." />
+    <meta name="keywords" content="Flash USDT, Real USDT, USDT Exchange, TRC20, BEP20, Crypto Exchange, Instant USDT" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Social Media Sharing -->
+    <meta property="og:title" content="FlashForReal - Exchange Real USDT to Flash USDT" />
+    <meta property="og:description" content="The fastest way to exchange Real USDT for Flash USDT. Instant QR payment and verified delivery." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://flashforreal.shop" />
+    <meta property="og:image" content="https://flashforreal.shop/og-image.jpg" /> <!-- Replace with your real image URL -->
+    
+    <!-- Favicon (Embedded directly, no file upload needed) -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300b86b'%3E%3Cpath d='M13 10V3L4 14h7v7l9-11h-7z'/%3E%3C/svg%3E" type="image/svg+xml" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --background: 0.09 0.025 155;
+            --foreground: 0.95 0.01 130;
+            --card: 0.12 0.03 155;
+            --border: 0.22 0.04 155;
+            --primary: 0.78 0.22 145;
+            --primary-foreground: 0.06 0.02 150;
+            --gold: 0.82 0.16 85;
+            --secondary: 0.16 0.04 155;
+            --muted: 0.14 0.025 155;
+            --muted-foreground: 0.6 0.04 145;
+            --radius: 0.75rem;
+            --input-bg: #0b1a13; /* Specific deep dark background for inputs */
+            --input-text: #e0e7e3; /* High contrast white/greenish text */
+        }
+
+        body {
+            background-color: oklch(var(--background));
+            color: oklch(var(--foreground));
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .font-display { font-family: 'Manrope', sans-serif; }
+        
+        .text-gradient-green {
+            background: linear-gradient(135deg, oklch(var(--primary)) 0%, oklch(0.9 0.14 145) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-gradient-gold {
+            background: linear-gradient(135deg, oklch(var(--gold)) 0%, oklch(0.95 0.1 85) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glow-green { box-shadow: 0 0 20px oklch(var(--primary) / 0.4), 0 0 40px oklch(var(--primary) / 0.15); }
+        .glow-green-sm { box-shadow: 0 0 10px oklch(var(--primary) / 0.35), 0 0 20px oklch(var(--primary) / 0.12); }
+        .glow-gold { box-shadow: 0 0 20px oklch(var(--gold) / 0.4), 0 0 40px oklch(var(--gold) / 0.15); }
+        
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .modal-overlay { 
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease; z-index: 9998;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        
+        .modal-content {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9);
+            width: 100%; max-width: 560px; max-height: 90dvh; background: oklch(var(--card));
+            border: 1px solid oklch(var(--border)); border-radius: var(--radius);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0; pointer-events: none; z-index: 9999;
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+        .modal-content.active { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+        
+        .modal-body { flex: 1; overflow-y: auto; padding: 1.5rem; padding-top: 0.5rem; background: oklch(var(--card)); }
+        .modal-footer { flex-shrink: 0; padding: 1rem 1.5rem; border-top: 1px solid oklch(var(--border)); background: oklch(var(--card)); }
+
+        .step-container { display: none; animation: fadeSlide 0.3s ease forwards; }
+        .step-container.active { display: block; }
+        @keyframes fadeSlide { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: oklch(var(--background)); }
+        ::-webkit-scrollbar-thumb { background: oklch(var(--primary) / 0.4); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: oklch(var(--primary) / 0.6); }
+        
+        .text-green-brand { color: oklch(var(--primary)); }
+        .text-gold-brand { color: oklch(var(--gold)); }
+        .bg-surface-card { background-color: oklch(var(--card)); }
+        .border-primary\/20 { border-color: oklch(var(--primary) / 0.2); }
+        .border-primary\/30 { border-color: oklch(var(--primary) / 0.3); }
+        .bg-primary\/10 { background-color: oklch(var(--primary) / 0.1); }
+        .bg-primary\/5 { background-color: oklch(var(--primary) / 0.05); }
+        .bg-accent\/10 { background-color: oklch(var(--gold) / 0.1); }
+        .border-accent\/30 { border-color: oklch(var(--gold) / 0.3); }
+
+        /* Custom Input Fixes for High Contrast Visibility */
+        .modal-input {
+            background-color: var(--input-bg) !important;
+            color: var(--input-text) !important;
+            border: 1px solid oklch(var(--border)) !important;
+        }
+        .modal-input:focus {
+            border-color: oklch(var(--primary)) !important;
+            box-shadow: 0 0 0 1px oklch(var(--primary)) !important;
+            outline: none !important;
+        }
+        .modal-input::placeholder {
+            color: #70877a !important; /* Mid-tone greenish grey to contrast against dark bg */
+            opacity: 1 !important;
+        }
+        .modal-input:-webkit-autofill,
+        .modal-input:-webkit-autofill:hover, 
+        .modal-input:-webkit-autofill:focus {
+            -webkit-text-fill-color: var(--input-text) !important;
+            -webkit-box-shadow: 0 0 0px 1000px var(--input-bg) inset !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== HEADER ==================== -->
+    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-transparent border-b border-transparent">
+        <div class="container mx-auto px-4 sm:px-6">
+            <nav class="flex items-center justify-between h-16">
+                <button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="flex items-center gap-2.5 group">
+                    <svg class="w-9 h-9 text-green-brand group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <span class="font-display font-bold text-xl tracking-tight">
+                        <span class="text-green-brand">Flash</span><span class="text-foreground">ForReal</span>
+                    </span>
+                </button>
+
+                <div class="hidden md:flex items-center gap-6">
+                    <button onclick="scrollToId('packages')" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Packages</button>
+                    <button onclick="scrollToId('how-it-works')" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">How It Works</button>
+                    <button onclick="scrollToId('support')" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Support</button>
+                </div>
+
+                <div class="hidden md:flex items-center gap-3">
+                    <button onclick="scrollToId('packages')" class="bg-green-brand text-primary-foreground hover:opacity-90 font-semibold px-5 py-2 rounded-md text-sm glow-green-sm transition-all">Buy Now</button>
+                </div>
+
+                <button id="mobile-menu-btn" class="md:hidden p-2 text-muted-foreground hover:text-foreground">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+            </nav>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden border-t border-border py-4 bg-background/95 backdrop-blur-md flex flex-col gap-2">
+                <button onclick="scrollToId('packages')" class="text-left px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">Packages</button>
+                <button onclick="scrollToId('how-it-works')" class="text-left px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">How It Works</button>
+                <button onclick="scrollToId('support')" class="text-left px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground">Support</button>
+                <div class="px-4 pt-2"><button onclick="scrollToId('packages')" class="w-full bg-green-brand text-primary-foreground hover:opacity-90 font-semibold py-2 rounded-md">Buy Flash USDT</button></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
+        <div class="absolute inset-0 bg-gradient-to-b from-background via-secondary/10 to-background opacity-80"></div>
+        <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(oklch(0.78 0.22 145) 1px, transparent 1px); background-size: 48px 48px;"></div>
+        
+        <div class="relative container mx-auto px-4 sm:px-6 text-center z-10">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-sm font-medium text-green-brand mb-8">
+                <span class="w-2 h-2 rounded-full bg-green-brand animate-pulse"></span>
+                Real USDT - Flash USDT Exchange - Live & Active
+            </div>
+
+            <h1 class="font-display font-extrabold text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight tracking-tight mb-6">
+                Trade <span class="text-gradient-gold">Real USDT</span><br>
+                for <span class="text-gradient-green">Flash USDT</span><br>
+                <span class="text-foreground/90">Fast & Secure</span>
+            </h1>
+
+            <p class="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
+                The fastest and most trusted way to exchange Real USDT for Flash USDT. Premium packages, instant QR payment, and verified delivery within 30 minutes.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+                <button onclick="scrollToId('packages')" class="bg-green-brand text-primary-foreground hover:opacity-90 font-bold text-base px-8 py-4 rounded-lg glow-green transition-all hover:scale-105 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    View Packages
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                </button>
+                <button onclick="scrollToId('support')" class="border border-border hover:border-primary/50 text-foreground hover:bg-secondary font-semibold text-base px-8 py-4 rounded-lg transition-all">Contact Support</button>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-4 mb-16">
+                <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-card border border-border text-sm font-medium text-muted-foreground">
+                    <svg class="w-4 h-4 text-green-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    100% Secure
+                </div>
+                <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-card border border-border text-sm font-medium text-muted-foreground">
+                    <svg class="w-4 h-4 text-green-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Instant Delivery
+                </div>
+                <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-card border border-border text-sm font-medium text-muted-foreground">
+                    <svg class="w-4 h-4 text-green-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    24/7 Support
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-6 max-w-xl mx-auto">
+                <div class="text-center"><div class="font-display font-black text-2xl sm:text-3xl text-green-brand">2,500+</div><div class="text-xs sm:text-sm text-muted-foreground mt-1">Orders Completed</div></div>
+                <div class="text-center"><div class="font-display font-black text-2xl sm:text-3xl text-green-brand">30 min</div><div class="text-xs sm:text-sm text-muted-foreground mt-1">Avg. Delivery</div></div>
+                <div class="text-center"><div class="font-display font-black text-2xl sm:text-3xl text-green-brand">99.8%</div><div class="text-xs sm:text-sm text-muted-foreground mt-1">Success Rate</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== HOW IT WORKS ==================== -->
+    <section id="how-it-works" class="py-24 relative">
+        <div class="absolute inset-0 bg-gradient-to-b from-background via-secondary/20 to-background pointer-events-none"></div>
+        <div class="relative container mx-auto px-4 sm:px-6">
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-sm font-medium text-green-brand mb-5">Simple Process</div>
+                <h2 class="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-foreground tracking-tight mb-4">
+                    How It <span class="text-gradient-green">Works</span>
+                </h2>
+                <p class="text-muted-foreground text-lg max-w-xl mx-auto">Three simple steps to exchange your Real USDT for Flash USDT — fast, secure, and no complicated setup required.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+                <div class="hidden md:block absolute top-16 left-1/6 right-1/6 h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
+                
+                <div class="bg-card border border-border rounded-2xl p-8 h-full flex flex-col shadow-card hover:shadow-card-hover hover:border-primary/30 transition-all duration-300 group">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-14 h-14 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-7 h-7 text-green-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                        </div>
+                        <span class="font-display font-black text-5xl text-border leading-none select-none">01</span>
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-foreground mb-3">Select a Package</h3>
+                    <p class="text-muted-foreground leading-relaxed text-sm flex-1">Choose how much Flash USDT you want to exchange — starting from $39 for 899 Flash USDT. The more you exchange, the better the rate.</p>
+                </div>
+
+                <div class="bg-card border border-border rounded-2xl p-8 h-full flex flex-col shadow-card hover:shadow-card-hover hover:border-primary/30 transition-all duration-300 group">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-14 h-14 rounded-xl bg-accent/10 border border-accent/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-7 h-7 text-gold-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+                        </div>
+                        <span class="font-display font-black text-5xl text-border leading-none select-none">02</span>
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-foreground mb-3">Send Real USDT & Enter Your Wallet</h3>
+                    <p class="text-muted-foreground leading-relaxed text-sm flex-1">Scan the QR code and send the exact Real USDT amount. Then enter the TRC20/BEP20 wallet address where you want to receive your Flash USDT.</p>
+                </div>
+
+                <div class="bg-card border border-border rounded-2xl p-8 h-full flex flex-col shadow-card hover:shadow-card-hover hover:border-primary/30 transition-all duration-300 group">
+                    <div class="flex items-start justify-between mb-6">
+                        <div class="w-14 h-14 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <svg class="w-7 h-7 text-green-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <span class="font-display font-black text-5xl text-border leading-none select-none">03</span>
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-foreground mb-3">Receive Flash USDT</h3>
+                    <p class="text-muted-foreground leading-relaxed text-sm flex-1">Once your Real USDT payment is confirmed, we send the Flash USDT directly to your wallet within 30 minutes. Valid for 180 days from date of purchase. Support available 24/7.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== SUPPORTED WALLETS ==================== -->
+    <section id="wallets" class="py-24 relative">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-sm font-medium text-green-brand mb-5">Flash USDT Compatible</div>
+                <h2 class="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-foreground tracking-tight mb-4">
+                    Supported <span class="text-gradient-green">Wallets</span>
+                </h2>
+                <p class="text-muted-foreground text-lg max-w-2xl mx-auto">Flash USDT is delivered on TRC20 and BEP20 networks. Use any of these wallets to send Real USDT and receive your Flash USDT.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                
+                <div class="bg-card border border-border rounded-2xl p-5 hover:border-primary/30 hover:shadow-card-hover transition-all duration-300 group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5 text-green-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap mb-1.5"><h3 class="font-display font-bold text-base text-foreground leading-tight">Trust Wallet</h3><span class="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border border-primary/30 bg-primary/15 text-green-brand">Mobile</span></div>
+                            <p class="text-muted-foreground text-xs leading-relaxed">Built-in TRC20 and BEP20 network support. Simply select USDT on TRC20 or BEP20 and send to our address.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card border border-border rounded-2xl p-5 hover:border-primary/30 hover:shadow-card-hover transition-all duration-300 group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-accent/10 border border-accent/30 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5 text-gold-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap mb-1.5"><h3 class="font-display font-bold text-base text-foreground leading-tight">Binance</h3><span class="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border border-accent/30 bg-accent/15 text-gold-brand">Exchange</span></div>
+                            <p class="text-muted-foreground text-xs leading-relaxed">Send USDT directly from your Binance account on TRC20 or BEP20 network with low fees.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card border border-border rounded-2xl p-5 hover:border-primary/30 hover:shadow-card-hover transition-all duration-300 group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap mb-1.5"><h3 class="font-display font-bold text-base text-foreground leading-tight">MetaMask</h3><span class="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border border-orange-500/30 bg-orange-500/15 text-orange-400">Browser & Mobile</span></div>
+                            <p class="text-muted-foreground text-xs leading-relaxed">Supports BEP20 (BSC) natively and TRC20 with Tron network added. Works on browser extension and mobile.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-card border border-border rounded-2xl p-5 hover:border-primary/30 hover:shadow-card-hover transition-all duration-300 group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap mb-1.5"><h3 class="font-display font-bold text-base text-foreground leading-tight">Exodus</h3><span class="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border border-purple-500/30 bg-purple-500/15 text-purple-400">Desktop & Mobile</span></div>
+                            <p class="text-muted-foreground text-xs leading-relaxed">Desktop and mobile wallet with native TRC20 and BEP20 USDT support. Easy send flow.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card border border-border rounded-2xl p-5 hover:border-primary/30 hover:shadow-card-hover transition-all duration-300 group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5 text-green-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap mb-1.5"><h3 class="font-display font-bold text-base text-foreground leading-tight">ZenGo</h3><span class="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border border-primary/30 bg-primary/15 text-green-brand">Mobile</span></div>
+                            <p class="text-muted-foreground text-xs leading-relaxed">Keyless wallet with full TRC20 USDT support. No seed phrase needed.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-card border border-border rounded-2xl p-5 hover:border-primary/30 hover:shadow-card-hover transition-all duration-300 group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-11 h-11 rounded-xl bg-violet-500/10 border border-violet-500/30 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                            <svg class="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 flex-wrap mb-1.5"><h3 class="font-display font-bold text-base text-foreground leading-tight">Phantom</h3><span class="text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border border-violet-500/30 bg-violet-500/15 text-violet-400">Browser & Mobile</span></div>
+                            <p class="text-muted-foreground text-xs leading-relaxed">Multi-chain wallet supporting TRC20 USDT on Tron. Available on browser and mobile.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="mt-10 text-center">
+                <p class="text-sm text-muted-foreground max-w-xl mx-auto">Always ensure you are sending on <span class="text-green-brand font-semibold">TRC20 (Tron)</span> or <span class="text-gold-brand font-semibold">BEP20 (BSC)</span> only. Sending on the wrong network may result in permanent loss of funds.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== PACKAGES SECTION ==================== -->
+    <section id="packages" class="py-24 relative">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-sm font-medium text-green-brand mb-5">Choose Your Package</div>
+                <h2 class="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-foreground tracking-tight mb-4">
+                    Flash USDT <span class="text-gradient-gold">Packages</span>
+                </h2>
+                <p class="text-muted-foreground text-lg max-w-xl mx-auto">Select the package that suits your trading volume. The more you buy, the better the rate.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
+                
+                <!-- Package 1: Demo -->
+                <div class="relative bg-card border border-border rounded-2xl p-6 flex flex-col hover:border-primary/40 shadow-card hover:shadow-card-hover transition-all duration-300 group">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10"><span class="px-3 py-0.5 text-xs font-bold bg-secondary text-secondary-foreground border border-border rounded-full">Try It Out</span></div>
+                    <div class="mb-4"><span class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Demo</span></div>
+                    <div class="mb-1"><span class="text-lg font-bold text-muted-foreground">$</span><span class="font-display font-black text-4xl text-foreground">39</span><span class="text-sm text-muted-foreground"> USD</span></div>
+                    <div class="mb-6"><span class="font-display font-extrabold text-2xl text-foreground">899</span><span class="text-sm font-medium text-muted-foreground"> Flash USDT</span></div>
+                    <div class="h-px bg-border mb-5"></div>
+                    <ul class="flex-1 mb-6 space-y-2.5">
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> 899 Flash USDT delivered</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Rate: 23.1x per $1</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Delivery within 30 min</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Valid For 180 Days</li>
+                    </ul>
+                    <button onclick="openModal({id:1, name:'Demo', price:39, amount:899})" class="w-full bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:text-foreground border border-border font-bold py-3 rounded-lg transition-all duration-200">Buy Now</button>
+                </div>
+
+                <!-- Package 2: Starter -->
+                <div class="relative bg-card border border-border rounded-2xl p-6 flex flex-col hover:border-primary/40 shadow-card hover:shadow-card-hover transition-all duration-300 group">
+                    <div class="mb-4"><span class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Starter</span></div>
+                    <div class="mb-1"><span class="text-lg font-bold text-muted-foreground">$</span><span class="font-display font-black text-4xl text-foreground">79</span><span class="text-sm text-muted-foreground"> USD</span></div>
+                    <div class="mb-6"><span class="font-display font-extrabold text-2xl text-foreground">1,950</span><span class="text-sm font-medium text-muted-foreground"> Flash USDT</span></div>
+                    <div class="h-px bg-border mb-5"></div>
+                    <ul class="flex-1 mb-6 space-y-2.5">
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> 1,950 Flash USDT delivered</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Rate: 24.7x per $1</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Delivery within 30 min</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Valid For 180 Days</li>
+                    </ul>
+                    <button onclick="openModal({id:2, name:'Starter', price:79, amount:1950})" class="w-full bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:text-foreground border border-border font-bold py-3 rounded-lg transition-all duration-200">Buy Now</button>
+                </div>
+
+                <!-- Package 3: Popular -->
+                <div class="relative bg-primary/5 border-primary/60 rounded-2xl p-6 flex flex-col shadow-green-glow hover:shadow-green-glow transition-all duration-300 group">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10"><span class="px-3 py-0.5 text-xs font-bold bg-green-brand text-primary-foreground rounded-full">Most Popular</span></div>
+                    <div class="absolute top-4 right-4"><svg class="w-4 h-4 text-green-brand fill-primary/50" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg></div>
+                    <div class="mb-4"><span class="text-xs font-bold uppercase tracking-widest text-green-brand">Popular</span></div>
+                    <div class="mb-1"><span class="text-lg font-bold text-muted-foreground">$</span><span class="font-display font-black text-4xl text-foreground">149</span><span class="text-sm text-muted-foreground"> USD</span></div>
+                    <div class="mb-6"><span class="font-display font-extrabold text-2xl text-green-brand">3,900</span><span class="text-sm font-medium text-muted-foreground"> Flash USDT</span></div>
+                    <div class="h-px bg-primary/20 mb-5"></div>
+                    <ul class="flex-1 mb-6 space-y-2.5">
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> 3,900 Flash USDT delivered</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Rate: 26.2x per $1</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Delivery within 30 min</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Valid For 180 Days</li>
+                    </ul>
+                    <button onclick="openModal({id:3, name:'Popular', price:149, amount:3900})" class="w-full bg-green-brand text-primary-foreground hover:opacity-90 font-bold py-3 rounded-lg glow-green-sm transition-all duration-200 hover:scale-105">Buy Now</button>
+                </div>
+
+                <!-- Package 4: Pro -->
+                <div class="relative bg-card border border-border rounded-2xl p-6 flex flex-col hover:border-primary/40 shadow-card hover:shadow-card-hover transition-all duration-300 group">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10"><span class="px-3 py-0.5 text-xs font-bold bg-secondary text-secondary-foreground border border-border rounded-full">Best Value</span></div>
+                    <div class="mb-4"><span class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Pro</span></div>
+                    <div class="mb-1"><span class="text-lg font-bold text-muted-foreground">$</span><span class="font-display font-black text-4xl text-foreground">299</span><span class="text-sm text-muted-foreground"> USD</span></div>
+                    <div class="mb-6"><span class="font-display font-extrabold text-2xl text-foreground">8,000</span><span class="text-sm font-medium text-muted-foreground"> Flash USDT</span></div>
+                    <div class="h-px bg-border mb-5"></div>
+                    <ul class="flex-1 mb-6 space-y-2.5">
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> 8,000 Flash USDT delivered</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Rate: 26.8x per $1</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Delivery within 30 min</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Valid For 180 Days</li>
+                    </ul>
+                    <button onclick="openModal({id:4, name:'Pro', price:299, amount:8000})" class="w-full bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:text-foreground border border-border font-bold py-3 rounded-lg transition-all duration-200">Buy Now</button>
+                </div>
+
+                <!-- Package 5: Elite -->
+                <div class="relative bg-card border border-border rounded-2xl p-6 flex flex-col hover:border-primary/40 shadow-card hover:shadow-card-hover transition-all duration-300 group">
+                    <div class="mb-4"><span class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Elite</span></div>
+                    <div class="mb-1"><span class="text-lg font-bold text-muted-foreground">$</span><span class="font-display font-black text-4xl text-foreground">499</span><span class="text-sm text-muted-foreground"> USD</span></div>
+                    <div class="mb-6"><span class="font-display font-extrabold text-2xl text-foreground">14,000</span><span class="text-sm font-medium text-muted-foreground"> Flash USDT</span></div>
+                    <div class="h-px bg-border mb-5"></div>
+                    <ul class="flex-1 mb-6 space-y-2.5">
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> 14,000 Flash USDT delivered</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Rate: 28.1x per $1</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Delivery within 30 min</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Valid For 180 Days</li>
+                    </ul>
+                    <button onclick="openModal({id:5, name:'Elite', price:499, amount:14000})" class="w-full bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:text-foreground border border-border font-bold py-3 rounded-lg transition-all duration-200">Buy Now</button>
+                </div>
+
+                <!-- Package 6: Ultimate -->
+                <div class="relative bg-card border border-border rounded-2xl p-6 flex flex-col hover:border-primary/40 shadow-card hover:shadow-card-hover transition-all duration-300 group">
+                    <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 z-10"><span class="px-3 py-0.5 text-xs font-bold bg-secondary text-secondary-foreground border border-border rounded-full">Power Trader</span></div>
+                    <div class="mb-4"><span class="text-xs font-bold uppercase tracking-widest text-muted-foreground">Ultimate</span></div>
+                    <div class="mb-1"><span class="text-lg font-bold text-muted-foreground">$</span><span class="font-display font-black text-4xl text-foreground">999</span><span class="text-sm text-muted-foreground"> USD</span></div>
+                    <div class="mb-6"><span class="font-display font-extrabold text-2xl text-foreground">30,000</span><span class="text-sm font-medium text-muted-foreground"> Flash USDT</span></div>
+                    <div class="h-px bg-border mb-5"></div>
+                    <ul class="flex-1 mb-6 space-y-2.5">
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> 30,000 Flash USDT delivered</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Rate: 30.0x per $1</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Delivery within 30 min</li>
+                        <li class="flex items-center gap-2 text-sm text-muted-foreground"><svg class="w-3.5 h-3.5 text-green-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Valid For 180 Days</li>
+                    </ul>
+                    <button onclick="openModal({id:6, name:'Ultimate', price:999, amount:30000})" class="w-full bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:text-foreground border border-border font-bold py-3 rounded-lg transition-all duration-200">Buy Now</button>
+                </div>
+                
+            </div>
+            <p class="text-center text-sm text-muted-foreground mt-10">All prices in USD · Delivery within 30 minutes · 24/7 customer support</p>
+        </div>
+    </section>
+
+    <!-- ==================== SUPPORT SECTION ==================== -->
+    <section id="support" class="py-24 relative">
+        <div class="container mx-auto px-4 sm:px-6">
+            <div class="text-center mb-16">
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-sm font-medium text-green-brand mb-5">Always Available</div>
+                <h2 class="font-display font-extrabold text-3xl sm:text-4xl md:text-5xl text-foreground tracking-tight mb-4">
+                    24/7 Customer <span class="text-gradient-green">Support</span>
+                </h2>
+                <p class="text-muted-foreground text-lg max-w-xl mx-auto">We're always here to help — any time, any day. Reach out through your preferred channel.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                
+                <div class="bg-card border border-border rounded-2xl p-6 h-full flex flex-col shadow-card hover:shadow-card-hover hover:border-primary/30 transition-all duration-300 text-center group">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03 8 9-8s9 3.582 9 8z"></path></svg>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-foreground mb-2">WhatsApp</h3>
+                    <p class="text-muted-foreground text-sm leading-relaxed flex-1 mb-5">Chat with us directly on WhatsApp for instant support.</p>
+                    <a href="https://wa.me/16017471526" target="_blank" class="w-full inline-flex justify-center items-center bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-lg transition-all duration-200 hover:scale-105">Message on WhatsApp</a>
+                </div>
+
+                <div class="bg-card border border-border rounded-2xl p-6 h-full flex flex-col shadow-card hover:shadow-card-hover hover:border-primary/30 transition-all duration-300 text-center group">
+                    <div class="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7 text-sky-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-foreground mb-2">Telegram</h3>
+                    <p class="text-muted-foreground text-sm leading-relaxed flex-1 mb-5">Join our Telegram channel for updates and support.</p>
+                    <a href="https://t.me/GetFlashU" target="_blank" class="w-full inline-flex justify-center items-center bg-sky-600 hover:bg-sky-500 text-white font-semibold py-3 rounded-lg transition-all duration-200 hover:scale-105">Message on Telegram</a>
+                </div>
+
+                <div class="bg-card border border-border rounded-2xl p-6 h-full flex flex-col shadow-card hover:shadow-card-hover hover:border-primary/30 transition-all duration-300 text-center group">
+                    <div class="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center mx-auto mb-5 group-hover:scale-110 transition-transform">
+                        <svg class="w-7 h-7 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h3 class="font-display font-bold text-lg text-foreground mb-2">Gmail Support</h3>
+                    <p class="text-muted-foreground text-sm leading-relaxed flex-1 mb-5">Email us at our Gmail and we'll respond within the hour.</p>
+                    <a href="mailto:support@flashforreal.shop" class="w-full inline-flex justify-center items-center bg-red-600 hover:bg-red-500 text-white font-semibold py-3 rounded-lg transition-all duration-200 hover:scale-105">Send Gmail</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="relative border-t border-border">
+        <div class="container mx-auto px-4 sm:px-6 py-12">
+            <div class="flex flex-col md:flex-row justify-between gap-10 mb-10">
+                <div class="md:max-w-xs">
+                    <div class="flex items-center gap-2.5 mb-4">
+                        <svg class="w-8 h-8 text-green-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <span class="font-display font-bold text-lg tracking-tight"><span class="text-green-brand">Flash</span><span class="text-foreground">ForReal</span></span>
+                    </div>
+                    <p class="text-muted-foreground text-sm leading-relaxed">The most trusted Real USDT to Flash USDT exchange platform. Fast, secure, and professional.</p>
+                </div>
+                <div>
+                    <h4 class="font-display font-bold text-sm uppercase tracking-widest text-foreground mb-4">Quick Links</h4>
+                    <ul class="space-y-2.5">
+                        <li><button onclick="window.scrollTo({top:0, behavior:'smooth'})" class="text-sm text-muted-foreground hover:text-green-brand transition-colors">Home</button></li>
+                        <li><button onclick="scrollToId('packages')" class="text-sm text-muted-foreground hover:text-green-brand transition-colors">Packages</button></li>
+                        <li><button onclick="scrollToId('how-it-works')" class="text-sm text-muted-foreground hover:text-green-brand transition-colors">How It Works</button></li>
+                        <li><button onclick="scrollToId('support')" class="text-sm text-muted-foreground hover:text-green-brand transition-colors">Support</button></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="h-px bg-border mb-6"></div>
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+                <div class="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
+                    <p>© 2026 FlashForReal. All rights reserved.</p>
+                    <span class="hidden sm:block text-border">·</span>
+                    <p class="italic opacity-70">FlashForReal is not affiliated with Tether or any official USDT issuer.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== PAYMENT MODAL ==================== -->
+    
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="modal-overlay" onclick="closeModal()"></div>
+
+    <!-- Modal Content -->
+    <div id="modal-content" class="modal-content">
+        
+        <!-- Sticky Header -->
+        <div class="flex-shrink-0 p-6 pb-3 border-b border-border bg-card">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <div class="text-xs font-bold uppercase tracking-widest text-green-brand mb-1"><span id="modal-pkg-name">Starter</span> Package</div>
+                    <h3 class="font-display font-extrabold text-2xl text-foreground">Purchase Flash USDT</h3>
+                    <p class="text-muted-foreground text-sm mt-1">
+                        <span class="text-gold-brand font-bold">$<span id="modal-pkg-price">79</span> Real USDT</span> → 
+                        <span class="text-green-brand font-bold"><span id="modal-pkg-amount">1,950</span> Flash USDT</span>
+                    </p>
+                </div>
+                <button onclick="closeModal()" class="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors flex-shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <!-- Step Indicator -->
+            <div class="flex items-center gap-1 mt-4">
+                <div class="flex items-center gap-1 flex-1 min-w-0">
+                    <div id="step-indicator-1" class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 bg-primary/20 border border-primary text-green-brand">1</div>
+                    <span class="text-[9px] font-semibold truncate text-foreground hidden sm:block">Send Real USDT</span>
+                </div>
+                <div class="flex-1 h-px bg-border mx-1 transition-colors" id="step-line-1"></div>
+                
+                <div class="flex items-center gap-1 flex-1 min-w-0">
+                    <div id="step-indicator-2" class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 bg-secondary border border-border text-muted-foreground">2</div>
+                    <span class="text-[9px] font-semibold truncate text-muted-foreground hidden sm:block">Delivery Wallet</span>
+                </div>
+                <div class="flex-1 h-px bg-border mx-1 transition-colors" id="step-line-2"></div>
+                
+                <div class="flex items-center gap-1 flex-1 min-w-0">
+                    <div id="step-indicator-3" class="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 bg-secondary border border-border text-muted-foreground">3</div>
+                    <span class="text-[9px] font-semibold truncate text-muted-foreground hidden sm:block">Confirm Order</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scrollable Body -->
+        <div id="modal-body" class="modal-body scrollbar-hide">
+            
+            <!-- STEP 1: Send Real USDT -->
+            <div id="step-1" class="step-container active">
+                <div class="border-b border-border pb-5">
+                    <div class="mb-4">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-2 h-2 rounded-full bg-green-brand"></div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-green-brand">Option 1 — TRC20 (Tron Network)</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-3">
+                            <div class="relative flex-shrink-0">
+                                <div class="w-36 h-36 rounded-xl overflow-hidden border-2 border-primary/40 bg-white p-1">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=TZHL8xEf4ByNAgDgXo6ggMiXtaJuCYEB3C" alt="TRC20 QR" class="w-full h-full object-cover" />
+                                </div>
+                            </div>
+                            <div class="w-full">
+                                <p class="text-xs text-muted-foreground mb-1.5 text-center">
+                                    Send <span class="text-gold-brand font-semibold">$<span id="modal-step1-price">79</span> USDT</span> to this TRC20 address:
+                                </p>
+                                <div class="px-3 py-2.5 rounded-lg bg-background border border-primary/30 flex items-center gap-2 justify-between">
+                                    <span class="font-mono text-[11px] text-green-brand break-all text-left leading-relaxed">TZHL8xEf4ByNAgDgXo6ggMiXtaJuCYEB3C</span>
+                                    <button onclick="copyAddress('TZHL8xEf4ByNAgDgXo6ggMiXtaJuCYEB3C')" class="flex-shrink-0 text-xs text-muted-foreground hover:text-green-brand transition-colors px-2 py-1 rounded border border-border hover:border-primary/40">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 my-4">
+                        <div class="flex-1 h-px bg-border"></div>
+                        <span class="text-xs text-muted-foreground font-semibold uppercase tracking-widest">or</span>
+                        <div class="flex-1 h-px bg-border"></div>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-2 h-2 rounded-full bg-gold-brand"></div>
+                            <span class="text-xs font-bold uppercase tracking-widest text-gold-brand">Option 2 — BEP20 (Binance Smart Chain)</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-3">
+                            <div class="relative flex-shrink-0">
+                                <div class="w-36 h-36 rounded-xl overflow-hidden border-2 border-accent/40 bg-white p-1">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=0x98A9DF95fCC44FB6fB6576C64d9DfF3C66d5Dd4f" alt="BEP20 QR" class="w-full h-full object-cover" />
+                                </div>
+                            </div>
+                            <div class="w-full">
+                                <p class="text-xs text-muted-foreground mb-1.5 text-center">
+                                    Send <span class="text-gold-brand font-semibold">$<span id="modal-step1-price2">79</span> USDT</span> to this BEP20 address:
+                                </p>
+                                <div class="px-3 py-2.5 rounded-lg bg-background border border-accent/30 flex items-center gap-2 justify-between">
+                                    <span class="font-mono text-[11px] text-gold-brand break-all text-left leading-relaxed">0x98A9DF95fCC44FB6fB6576C64d9DfF3C66d5Dd4f</span>
+                                    <button onclick="copyAddress('0x98A9DF95fCC44FB6fB6576C64d9DfF3C66d5Dd4f')" class="flex-shrink-0 text-xs text-muted-foreground hover:text-gold-brand transition-colors px-2 py-1 rounded border border-border hover:border-accent/40">Copy</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-xs text-muted-foreground mt-4 text-center leading-relaxed">
+                        Send exactly <span class="text-gold-brand font-semibold">$<span id="modal-step1-price3">79</span> Real USDT</span> on either network, then click continue below.
+                    </p>
+                </div>
+            </div>
+
+            <!-- STEP 2: Delivery Wallet -->
+            <div id="step-2" class="step-container">
+                <div class="flex items-center gap-3 mb-5">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-green-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold text-base text-foreground leading-tight">Where should we send your Flash USDT?</h3>
+                        <p class="text-xs text-muted-foreground mt-0.5">Pick your preferred network and enter your wallet address</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-5">
+                    <button id="network-trc20" onclick="switchNetwork('trc20')" class="relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 border-green-brand bg-primary/10 shadow-[0_0_12px_0_rgba(0,200,100,0.15)] text-left">
+                        <div class="absolute top-2 right-2"><svg class="w-4 h-4 text-green-brand" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg></div>
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black bg-green-brand text-primary-foreground">T</div>
+                        <div class="text-center"><p class="text-sm font-bold text-green-brand">TRC20</p><p class="text-[10px] text-muted-foreground leading-tight mt-0.5">Tron Network</p></div>
+                    </button>
+
+                    <button id="network-bep20" onclick="switchNetwork('bep20')" class="relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 border-border bg-secondary/40 text-left hover:border-accent/40 hover:bg-accent/5">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-black bg-secondary text-muted-foreground">B</div>
+                        <div class="text-center"><p class="text-sm font-bold text-foreground">BEP20</p><p class="text-[10px] text-muted-foreground leading-tight mt-0.5">Binance Smart Chain</p></div>
+                    </button>
+                </div>
+
+                <div id="trc20-input-container">
+                    <label class="text-sm font-semibold text-foreground mb-1.5 block">Your TRC20 Wallet Address</label>
+                    <!-- FIX: Using the high-contrast modal-input class -->
+                    <input id="trc20-input" type="text" placeholder="T... TRC20 address" value="TZHL8xEf4ByNAgDgXo6ggMiXtaJuCYEB3C" class="modal-input w-full rounded-md px-3 py-2 text-sm font-mono">
+                    <p class="text-xs text-muted-foreground mt-2">TRC20 addresses typically start with <span class="text-green-brand font-semibold font-mono">T</span>. Sending to the wrong address is irreversible.</p>
+                </div>
+
+                <div id="bep20-input-container" class="hidden">
+                    <label class="text-sm font-semibold text-foreground mb-1.5 block">Your BEP20 Wallet Address</label>
+                    <!-- FIX: Using the high-contrast modal-input class -->
+                    <input id="bep20-input" type="text" placeholder="0x... BEP20/BSC address" value="0x98A9DF95fCC44FB6fB6576C64d9DfF3C66d5Dd4f" class="modal-input w-full rounded-md px-3 py-2 text-sm font-mono">
+                    <p class="text-xs text-muted-foreground mt-2">BEP20 addresses start with <span class="text-gold-brand font-semibold font-mono">0x</span> on the Binance Smart Chain network.</p>
+                </div>
+            </div>
+
+            <!-- STEP 3: Confirm Order -->
+            <div id="step-3" class="step-container">
+                <div id="summary-box" class="px-3 py-2.5 rounded-lg bg-primary/5 border border-primary/20 flex items-center gap-2 mb-4">
+                    <svg class="w-4 h-4 flex-shrink-0 text-green-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[10px] text-muted-foreground font-medium uppercase tracking-wide" id="summary-network-label">TRC20 Delivery Wallet (Tron)</p>
+                        <p class="font-mono text-xs truncate text-green-brand" id="summary-address">TZHL8xEf4ByNAgDgXo6ggMiXtaJuCYEB3C</p>
+                    </div>
+                    <button onclick="goToStep(2)" class="text-[10px] text-muted-foreground transition-colors px-2 py-0.5 rounded border border-border flex-shrink-0 hover:text-green-brand hover:border-primary/30">Edit</button>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-sm font-semibold text-foreground mb-1.5 block">Email</label>
+                        <input id="buyer-email" type="email" placeholder="your@email.com" class="modal-input w-full rounded-md px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label class="text-sm font-semibold text-foreground mb-1.5 block">Telegram ID</label>
+                        <input id="buyer-telegram" type="text" placeholder="@your_telegram_id" class="modal-input w-full rounded-md px-3 py-2 text-sm">
+                    </div>
+                    <p class="text-xs text-muted-foreground text-center pt-1">
+                        By confirming, you agree to our terms. Flash USDT delivered within <span class="text-green-brand font-semibold">30 minutes</span> after payment verification.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Sticky Footer -->
+        <div id="modal-footer" class="modal-footer">
+            <div class="flex gap-3">
+                <button id="modal-back-btn" onclick="goToStep(1)" class="hidden px-4 py-2.5 border border-border text-muted-foreground hover:text-foreground rounded-lg text-sm font-medium transition-colors">
+                    <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    Back
+                </button>
+                
+                <button id="modal-action-btn" onclick="handleModalAction()" class="flex-1 bg-green-brand text-primary-foreground hover:opacity-90 font-bold py-3 rounded-lg transition-all duration-200 glow-green-sm">
+                    <span id="modal-btn-text">I've Sent the Payment</span>
+                    <span id="modal-btn-loading" class="hidden"><svg class="w-4 h-4 inline mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8m-4 0l-4-4m0 0l-4 4m4-4v12"></path></svg> Processing...</span>
+                </button>
+            </div>
+        </div>
+        
+    </div>
+
+
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // --- UI Helpers ---
+        function scrollToId(id) {
+            const el = document.getElementById(id);
+            if(el) el.scrollIntoView({ behavior: 'smooth' });
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+        
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 20) {
+                navbar.classList.remove('bg-transparent', 'border-transparent');
+                navbar.classList.add('bg-background/95', 'backdrop-blur-md', 'border-b', 'border-border', 'shadow-card');
+            } else {
+                navbar.classList.remove('bg-background/95', 'backdrop-blur-md', 'border-b', 'border-border', 'shadow-card');
+                navbar.classList.add('bg-transparent', 'border-transparent');
+            }
+        });
+
+        // --- Modal Logic ---
+        let currentPkg = { id: 1, name: 'Starter', price: 79, amount: 1950 };
+        let currentStep = 1;
+        let selectedNetwork = 'trc20';
+
+        function openModal(pkg) {
+            currentPkg = pkg;
+            document.getElementById('modal-pkg-name').innerText = pkg.name;
+            document.getElementById('modal-pkg-price').innerText = pkg.price;
+            document.getElementById('modal-pkg-amount').innerText = pkg.amount.toLocaleString();
+            
+            document.querySelectorAll('#modal-step1-price, #modal-step1-price2, #modal-step1-price3').forEach(el => el.innerText = pkg.price);
+
+            document.getElementById('trc20-input').value = '';
+            document.getElementById('bep20-input').value = '';
+            document.getElementById('buyer-email').value = '';
+            document.getElementById('buyer-telegram').value = '';
+            selectedNetwork = 'trc20';
+            switchNetwork('trc20');
+            
+            document.getElementById('modal-overlay').classList.add('active');
+            document.getElementById('modal-content').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            goToStep(1);
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+            document.getElementById('modal-content').classList.remove('active');
+            document.body.style.overflow = '';
+            currentStep = 1;
+        }
+
+        function goToStep(step) {
+            currentStep = step;
+            
+            document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${step}`).classList.add('active');
+
+            for(let i=1; i<=3; i++) {
+                const indicator = document.getElementById(`step-indicator-${i}`);
+                const line = document.getElementById(`step-line-${i}`);
+                if(i < step) {
+                    indicator.className = 'w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 bg-green-brand text-primary-foreground';
+                    indicator.innerHTML = '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+                    if(line) line.className = 'flex-1 h-px bg-primary/40 mx-1 transition-colors';
+                } else if(i === step) {
+                    indicator.className = 'w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 bg-primary/20 border border-primary text-green-brand';
+                    indicator.innerText = i;
+                    if(line) line.className = 'flex-1 h-px bg-border mx-1 transition-colors';
+                } else {
+                    indicator.className = 'w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0 bg-secondary border border-border text-muted-foreground';
+                    indicator.innerText = i;
+                    if(line) line.className = 'flex-1 h-px bg-border mx-1 transition-colors';
+                }
+            }
+
+            const backBtn = document.getElementById('modal-back-btn');
+            const actionBtn = document.getElementById('modal-action-btn');
+            const btnText = document.getElementById('modal-btn-text');
+
+            if(step === 1) {
+                backBtn.classList.add('hidden');
+                btnText.innerText = "I've Sent the Payment";
+                actionBtn.className = 'flex-1 bg-green-brand text-primary-foreground hover:opacity-90 font-bold py-3 rounded-lg transition-all duration-200 glow-green-sm';
+            } else if(step === 2) {
+                backBtn.classList.remove('hidden');
+                btnText.innerText = "Continue";
+                actionBtn.className = 'flex-1 bg-green-brand text-primary-foreground hover:opacity-90 font-bold py-3 rounded-lg transition-all duration-200';
+            } else if(step === 3) {
+                backBtn.classList.remove('hidden');
+                btnText.innerText = `Confirm Order — $${currentPkg.price}`;
+                actionBtn.className = 'flex-1 bg-green-brand text-primary-foreground hover:opacity-90 font-bold py-3 rounded-lg transition-all duration-200 glow-green-sm';
+            }
+        }
+
+        function switchNetwork(network) {
+            selectedNetwork = network;
+            const trc20Btn = document.getElementById('network-trc20');
+            const bep20Btn = document.getElementById('network-bep20');
+            const trc20Input = document.getElementById('trc20-input-container');
+            const bep20Input = document.getElementById('bep20-input-container');
+
+            if(network === 'trc20') {
+                trc20Btn.className = 'relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 border-green-brand bg-primary/10 shadow-[0_0_12px_0_rgba(0,200,100,0.15)] text-left';
+                bep20Btn.className = 'relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 border-border bg-secondary/40 text-left hover:border-accent/40 hover:bg-accent/5';
+                trc20Input.classList.remove('hidden');
+                bep20Input.classList.add('hidden');
+                document.getElementById('summary-network-label').innerText = 'TRC20 Delivery Wallet (Tron)';
+                document.getElementById('summary-address').className = 'font-mono text-xs truncate text-green-brand';
+            } else {
+                trc20Btn.className = 'relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 border-border bg-secondary/40 text-left hover:border-primary/40 hover:bg-primary/5';
+                bep20Btn.className = 'relative flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200 border-accent bg-accent/10 shadow-[0_0_12px_0_rgba(245,158,11,0.15)] text-left';
+                trc20Input.classList.add('hidden');
+                bep20Input.classList.remove('hidden');
+                document.getElementById('summary-network-label').innerText = 'BEP20 Delivery Wallet (BSC)';
+                document.getElementById('summary-address').className = 'font-mono text-xs truncate text-gold-brand';
+            }
+        }
+
+        function copyAddress(addr) {
+            navigator.clipboard.writeText(addr);
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = "Copied!";
+            setTimeout(() => btn.innerText = originalText, 2000);
+        }
+
+        function handleModalAction() {
+            if(currentStep === 1) {
+                goToStep(2);
+            } else if(currentStep === 2) {
+                const address = selectedNetwork === 'trc20' ? document.getElementById('trc20-input').value : document.getElementById('bep20-input').value;
+                if(!address.trim()) {
+                    alert(`Please enter your ${selectedNetwork.toUpperCase()} wallet address.`);
+                    return;
+                }
+                document.getElementById('summary-address').innerText = address;
+                goToStep(3);
+            } else if(currentStep === 3) {
+                const email = document.getElementById('buyer-email').value;
+                const telegram = document.getElementById('buyer-telegram').value;
+                if(!email.trim() || !telegram.trim()) {
+                    alert("Please fill in your Email and Telegram ID.");
+                    return;
+                }
+
+                const btnText = document.getElementById('modal-btn-text');
+                const loading = document.getElementById('modal-btn-loading');
+                const actionBtn = document.getElementById('modal-action-btn');
+                
+                btnText.classList.add('hidden');
+                loading.classList.remove('hidden');
+                actionBtn.disabled = true;
+
+                setTimeout(() => {
+                    btnText.classList.remove('hidden');
+                    loading.classList.add('hidden');
+                    actionBtn.disabled = false;
+                    
+                    const orderId = Math.floor(Math.random() * 100000);
+                    document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
+                    
+                    document.getElementById('modal-body').innerHTML = `
+                        <div class="px-6 py-8 text-center step-container active">
+                            <div class="w-16 h-16 rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center mx-auto mb-5">
+                                <svg class="w-8 h-8 text-green-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <h3 class="font-display font-bold text-xl text-foreground mb-2">Order Placed Successfully!</h3>
+                            <p class="text-muted-foreground text-sm mb-3 max-w-xs mx-auto">
+                                Your order is accepted and is pending confirmation. Once confirmed, the Flash will be sent to your wallet within 30 minutes.
+                            </p>
+                            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-secondary border border-border text-sm text-muted-foreground mb-6">
+                                Order ID: <span class="font-mono font-bold text-foreground">#${orderId}</span>
+                            </div>
+                            <button onclick="closeModal()" class="w-full bg-green-brand text-primary-foreground hover:opacity-90 font-bold py-3 rounded-lg">Done</button>
+                        </div>
+                    `;
+                    document.getElementById('modal-footer').classList.add('hidden');
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
